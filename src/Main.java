@@ -1,7 +1,11 @@
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 
 public class Main {
@@ -24,11 +28,18 @@ public class Main {
 	// Lit le fichier texte octet par octet (8 bits)
 	public static void FileParser(String fileName){
 		
-		BufferedReader reader;
+		// Lecteur de fichier
+		FileReader fileReader;
+		BufferedReader buffer;
+		File txtFile;
 		
 		// Ouverture du fichier
 		try {
-			reader = new BufferedReader(new FileReader(fileName));
+			
+			txtFile = new File(fileName);
+			fileReader = new FileReader(txtFile);
+			buffer = new BufferedReader(fileReader, (int)txtFile.length());
+		
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -40,7 +51,7 @@ public class Main {
 		// Lecture du fichier
 		do{
 			try {
-				asciiLetter = reader.read();
+				asciiLetter = buffer.read();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -55,7 +66,7 @@ public class Main {
 		
 		// Fermeture du fichier
 		try {
-			reader.close();
+			buffer.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
