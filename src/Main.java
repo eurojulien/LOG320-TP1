@@ -8,22 +8,27 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Writer;
+import LettreControl.*;
 
 
 public class Main {
 
+	public static listControler lstControl = new listControler();
+	
 	public static void main(String[] args) {
 		
 		// Verifie qu'il y a un nom de fichier en parametre
 		if (args.length == 0){
 			System.out.println("Provide a text file !");
 		}
-		
 		else{
-			
 			FileParser(args[0]);
 		}
-
+		// on trie notre liste avec comparable
+		lstControl.trierListe();
+		// on imprime les résultats
+		lstControl.print();
+		
 	}
 	
 	// Ouvre un fichier texte a partir du nom de fichier
@@ -61,7 +66,7 @@ public class Main {
 			
 			// Impression de chaque lettre (mode test)
 			if(asciiLetter>0){
-				System.out.println(Character.toChars(asciiLetter));
+				lstControl.addlettre(Character.toChars(asciiLetter));
 			}
 			
 		}while (asciiLetter > 0);

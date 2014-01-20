@@ -11,7 +11,7 @@ public class lettre implements Comparable{
 
 
 	public void add(int valeurAjouter){
-		this.value += value;
+		this.value += valeurAjouter;
 	}
 
 
@@ -28,6 +28,8 @@ public class lettre implements Comparable{
 	@Override
 	public int compareTo(Object o) {
 		// TODO Auto-generated method stub
-		return value;
+		//on compare les valeurs
+		int paramCompare = ((lettre) o).value;
+		return (value > paramCompare ? 1 : (value == paramCompare ? 0 : -1));
 	}
 }
