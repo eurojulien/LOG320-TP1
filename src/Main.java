@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Writer;
 import LettreControl.*;
+import java.util.ArrayList;
 
 
 public class Main {
@@ -28,7 +29,10 @@ public class Main {
 		lstControl.trierListe();
 		// on imprime les résultats
 		lstControl.print();
-		
+
+        // on construit l'arbre
+        StructureArbre struct = new StructureArbre(lstControl.getArrayList());
+
 	}
 	
 	// Ouvre un fichier texte a partir du nom de fichier

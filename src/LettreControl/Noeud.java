@@ -2,6 +2,8 @@ package LettreControl;
 
 public class Noeud implements Comparable {
 
+    //Noeud Gauche = 1
+    //Noeud droit =0
 	private char caracter;
 	private int caracNbOccurence;
 	
@@ -46,7 +48,4 @@ public class Noeud implements Comparable {
 		int paramCompare = ((Noeud) o).caracNbOccurence;
 		return (caracNbOccurence > paramCompare ? 1 : (caracNbOccurence == paramCompare ? 0 : -1));
 	}
-	
-	
-	
 }

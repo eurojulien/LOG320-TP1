@@ -9,11 +9,17 @@ public class StructureArbre {
 
 	
 	public StructureArbre(ArrayList<lettre> listeOcurrenceLettre){
-
+        listeNoeud = new ArrayList<Noeud>();
 		for(lettre l : listeOcurrenceLettre){
 			Noeud n = new Noeud(l.getCaractere(),l.getValue());
 			listeNoeud.add(n);
 		}
+
+        try{
+            Noeud parent = contruireArbre();
+        } catch (Exception ex){
+            System.out.println("Une erreur s'est produite lors de la génération de l'arbre");
+        }
 	}
 	
 	public Noeud contruireArbre() throws Exception{
@@ -26,7 +32,7 @@ public class StructureArbre {
 			Noeud nParent = new Noeud('\u0000',ng.getCaracNbOccurence()+ng.getCaracNbOccurence(),ng,nd);
 			
 			listeNoeud.remove(0);
-			listeNoeud.remove(1);
+			listeNoeud.remove(0);
 			listeNoeud.add(nParent);
 			
 			this.trierNoeuds();

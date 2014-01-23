@@ -2,6 +2,7 @@ package LettreControl;
 
 import java.lang.reflect.Array;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 import java.util.Collections;
@@ -11,7 +12,7 @@ import java.util.List;
 
 public class listControler {
 
-	private List<lettre> lstlettres;
+	private ArrayList<lettre> lstlettres;
 	
 	public listControler(){
 		lstlettres = new ArrayList<lettre>();
@@ -40,7 +41,10 @@ public class listControler {
 		
 	}
 	
-	
+	public ArrayList<lettre> getArrayList(){
+        return lstlettres;
+    }
+
 	public void trierListe(){
 		Collections.sort(lstlettres);
 	}
