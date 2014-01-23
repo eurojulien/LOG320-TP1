@@ -27,10 +27,11 @@ public class Main {
 		}
 		// on trie notre liste avec comparable
 		lstControl.trierListe();
-		// on imprime les résultats
-		lstControl.print();
+		// on imprime les résultats (on enleve cet affichage pour gagner de la vitesse)
+		//lstControl.print();
 
         // on construit l'arbre
+        System.out.println("Il y a " + lstControl.getArrayList().size() + " lettres dans le texte");
         StructureArbre struct = new StructureArbre(lstControl.getArrayList());
 
 	}
