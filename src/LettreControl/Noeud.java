@@ -71,7 +71,8 @@ public class Noeud implements Comparable {
         Noeud parentArbre = this.parent;
 
         while(parentArbre != null){
-            chaineRetour += parentArbre.valeurBitVersParent;
+            if(parentArbre.valeurBitVersParent !=null)
+                chaineRetour = parentArbre.valeurBitVersParent + chaineRetour;
             parentArbre = parentArbre.getParent();
         }
 

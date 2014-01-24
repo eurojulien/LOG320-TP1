@@ -7,8 +7,10 @@ public class StructureArbre {
 
     private int compteur = 0;
 	private ArrayList<Noeud> listeNoeud;
+    private ArrayList<Noeud> listeLettreRapides;
     private static final String valeurNoeudVide = "00000000";
     private static final String valeurNoeudEOF = "000EOF00";
+    private String textEncoder = "";
 
 	public StructureArbre(ArrayList<lettre> listeOcurrenceLettre){
         listeNoeud = new ArrayList<Noeud>();
@@ -16,6 +18,8 @@ public class StructureArbre {
 			Noeud n = new Noeud(l.getCaractere(),l.getValue());
 			listeNoeud.add(n);
 		}
+        // on va garder une copie de la liste de lettre pour utilisation future
+        listeLettreRapides = (ArrayList<Noeud>) listeNoeud.clone();
         Noeud parent = null;
         try{
             parent = contruireArbre();
@@ -30,7 +34,35 @@ public class StructureArbre {
         System.out.println(headerFinal);
 	}
 
-    public String contruireHeader(Noeud parent){
+
+    public String encodeText(String texte) throws Exception{
+        // on encode le message
+        for(int i=0;i<texte.length();i++){
+            // on itere pour chaque lettre compris dans le texte
+            char caractere = texte.charAt(i);
+            // on prend le caractère désiré
+            boolean lettreTrouvee = false;
+            for(int j=0;j<listeLettreRapides.size();j++){
+                // on compare avec le tableau rapide de lettres
+                if(listeLettreRapides.get(j).getCaracter() == caractere){
+                    // le bon caractère a été trouver
+                    lettreTrouvee = true;
+                    textEncoder += listeLettreRapides.get(j).getBinaryValue();
+                }
+            }
+
+            if(!lettreTrouvee){
+                throw new Exception("Erreur dans l'encodage : une lettre n'a pas été trouvée !?");
+            }
+        }
+
+        System.out.println("Le texte a encoder contient " + texte.length() + " caractères");
+        System.out.println("Texte encodé sur " + textEncoder.length() +" bits : ");
+        System.out.println(textEncoder);
+        return textEncoder;
+    }
+
+    private String contruireHeader(Noeud parent){
         String header = "";
         Noeud debut = trouverNoeudPlusGauche(parent);
         header += debut.getBinaryCaracter() + debut.getValeurBitVersParent();
@@ -40,7 +72,7 @@ public class StructureArbre {
         return header;
     }
 
-    public String construireHeaderTriangle(Noeud gauche){
+    private String construireHeaderTriangle(Noeud gauche){
         String header = "";
         //System.out.println("Nouveau triangle : '" +  gauche.getCaracter()+ "'");
         // lecture du triangle
@@ -86,7 +118,7 @@ public class StructureArbre {
     }
 
 
-	public Noeud contruireArbre() throws Exception{
+	private Noeud contruireArbre() throws Exception{
 			
 		while(listeNoeud.size() >= 2){
 				

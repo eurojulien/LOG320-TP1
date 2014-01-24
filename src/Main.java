@@ -17,13 +17,13 @@ public class Main {
 	public static listControler lstControl = new listControler();
 	
 	public static void main(String[] args) {
-		
+		String texteComplet = "";
 		// Verifie qu'il y a un nom de fichier en parametre
 		if (args.length == 0){
 			System.out.println("Provide a text file !");
 		}
 		else{
-			FileParser(args[0]);
+            texteComplet = FileParser(args[0]);
 		}
 		// on trie notre liste avec comparable
 		lstControl.trierListe();
@@ -34,16 +34,24 @@ public class Main {
         System.out.println("Il y a " + lstControl.getArrayList().size() + " lettres dans le texte");
         StructureArbre struct = new StructureArbre(lstControl.getArrayList());
 
+        try{
+            struct.encodeText(texteComplet);
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+        }
+
+
 	}
 	
 	// Ouvre un fichier texte a partir du nom de fichier
 	// Lit le fichier texte octet par octet (8 bits)
-	public static void FileParser(String fileName){
+	public static String FileParser(String fileName){
 		
 		// Lecteur de fichier
 		FileReader fileReader;
 		BufferedReader buffer;
 		File txtFile;
+        String texteComplet = "";
 		
 		// Ouverture du fichier
 		try {
@@ -55,7 +63,7 @@ public class Main {
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return;
+			return "Failure reading text";
 		}
 		
 		int asciiLetter = 0;
@@ -71,6 +79,8 @@ public class Main {
 			
 			// Impression de chaque lettre (mode test)
 			if(asciiLetter>0){
+                char caractere[] = (Character.toChars(asciiLetter));
+                texteComplet += caractere[0];
 				lstControl.addlettre(Character.toChars(asciiLetter));
 			}
 			
@@ -83,6 +93,7 @@ public class Main {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+        return texteComplet;
 	}
 	
 	public static void WriteBitsInFile(String fileName){
