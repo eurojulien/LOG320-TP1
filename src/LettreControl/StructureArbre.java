@@ -9,7 +9,7 @@ public class StructureArbre {
 	private ArrayList<Noeud> listeNoeud;
     private ArrayList<Noeud> listeLettreRapides;
     private static final String valeurNoeudVide = "00000000";
-    private static final String valeurNoeudEOF = "000EOF00";
+    private static final String valeurNoeudEOF = "00000011";
     private String textEncoder = "";
 
 	public StructureArbre(ArrayList<lettre> listeOcurrenceLettre){
