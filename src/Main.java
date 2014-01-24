@@ -39,7 +39,8 @@ public class Main {
         }catch (Exception ex){
             System.out.println(ex.getMessage());
         }
-
+        // voici le texte encoder (comprenant le header) :
+        System.out.println("Text complet " +struct.getBinaryText());
 
 	}
 	

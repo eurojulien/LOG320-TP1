@@ -11,6 +11,7 @@ public class StructureArbre {
     private static final String valeurNoeudVide = "00000000";
     private static final String valeurNoeudEOF = "00000011";
     private String textEncoder = "";
+    private String header = "";
 
 	public StructureArbre(ArrayList<lettre> listeOcurrenceLettre){
         listeNoeud = new ArrayList<Noeud>();
@@ -34,6 +35,11 @@ public class StructureArbre {
         System.out.println(headerFinal);
 	}
 
+    public StructureArbre(String header){
+        // constructeur du décodage
+
+
+    }
 
     public String encodeText(String texte) throws Exception{
         // on encode le message
@@ -63,13 +69,17 @@ public class StructureArbre {
     }
 
     private String contruireHeader(Noeud parent){
-        String header = "";
+
         Noeud debut = trouverNoeudPlusGauche(parent);
         header += debut.getBinaryCaracter() + debut.getValeurBitVersParent();
         //System.out.println("Le noeud de Gauche est une Feuille : '" + debut.getCaracter() + "'");
         compteur ++;
         header += construireHeaderTriangle(debut);
         return header;
+    }
+
+    public String getBinaryText(){
+        return header + textEncoder;
     }
 
     private String construireHeaderTriangle(Noeud gauche){
@@ -117,7 +127,6 @@ public class StructureArbre {
         return noeudInspecter;
     }
 
-
 	private Noeud contruireArbre() throws Exception{
 			
 		while(listeNoeud.size() >= 2){
@@ -143,4 +152,6 @@ public class StructureArbre {
 	private void trierNoeuds(){
 		Collections.sort(listeNoeud);
 	}
+
+
 }
