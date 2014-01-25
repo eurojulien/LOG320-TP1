@@ -41,7 +41,8 @@ public class Main {
         }
         // voici le texte encoder (comprenant le header) :
         System.out.println("Text complet " +struct.getBinaryText());
-
+        String headerForTest = struct.getBinaryText();
+        struct = new StructureArbre(headerForTest);
 	}
 	
 	// Ouvre un fichier texte a partir du nom de fichier
@@ -71,6 +72,7 @@ public class Main {
 		
 		// Lecture du fichier
 		do{
+
 			try {
 				asciiLetter = buffer.read();
 			} catch (IOException e) {

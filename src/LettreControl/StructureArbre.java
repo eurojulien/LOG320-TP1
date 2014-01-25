@@ -29,16 +29,108 @@ public class StructureArbre {
         }
 
         String headerFinal = contruireHeader(parent);
-        headerFinal += valeurNoeudEOF;
+        header += valeurNoeudEOF;
         System.out.println("Il y a " + compteur + " lettres dans l'arbre");
         System.out.println("Voici le header, encoder en " + headerFinal.length() + " Bits");
         System.out.println(headerFinal);
 	}
 
-    public StructureArbre(String header){
+    public StructureArbre(String text){
         // constructeur du décodage
+        Boolean EOF = false;
+        Boolean wentDown = false;
+        String bitIndicateur = "";
+        String bitIndicateurPrecedant = "";
+        int step = 0;
+        String chaineDeTravail = "";
+        //store les noeuds
+        Noeud nodeGauche = null;
+        Noeud nodeDroite = null;
+        Noeud nodeParent = null;
+        // lorsque l'arbre commence a creuser dans des sous-branches, on doit se souvenir du point ou
+        // l'arborescence a commencer a descendre afin de pouvoir continuer
+        ArrayList<Noeud> nodeParentWhenDigging = new ArrayList<Noeud>();
+        while(!EOF){
+            chaineDeTravail = text.substring(step, step+8);
+            //System.out.println("We compare "+ chaineDeTravail + " to : " + valeurNoeudEOF);
+            if(chaineDeTravail.equals(valeurNoeudEOF)){
+                //on a trouver le end of file.
+                // a ce point on a l'arborescence de créer ! whouhou !
+                EOF = true;
+            }
+            else{
+                //le EOF n'est pas trouver, on continue a lire
+                bitIndicateur = text.substring(step+8,step+9);
+                if (bitIndicateurPrecedant.equals(bitIndicateur)){
+                    // on entre ou sort d'une sous-branche
+                    if(wentDown){
+                        // sa veut dire qu'on remonte !
+                        nodeGauche = nodeParentWhenDigging.get(nodeParentWhenDigging.size()-1);
+                        nodeParentWhenDigging.remove(nodeParentWhenDigging.size()-1);
+                        wentDown = false;
+                        nodeParent = new Noeud(Character.toChars(Integer.parseInt(valeurNoeudVide, 2))[0],0,nodeGauche,nodeDroite);
+                        nodeGauche = nodeParent;
+                    }else{
+                        // on passe au point gauche en descendant dans une autre branche
+                        if(nodeParent != null){
+                            // on a déja un parent
+                            nodeParentWhenDigging.add(nodeParent);
+                        }else{
+                            // pas encore de parent
+                            nodeParentWhenDigging.add(nodeGauche);
+                        }
+                        nodeGauche = new Noeud(Character.toChars(Integer.parseInt(chaineDeTravail, 2))[0],0);
+                        wentDown = true;
+                    }
+                }else{
+                    //c'est un triangle régulier
+                    if(chaineDeTravail.equals(Character.toChars(Integer.parseInt(valeurNoeudVide, 2))[0])){
+                        // c'est un noeud parent
+                        nodeParent = new Noeud(Character.toChars(Integer.parseInt(valeurNoeudVide, 2))[0],0,nodeGauche,nodeDroite);
+                        nodeGauche = nodeParent;
+                    }else{
+                        //System.out.println(Character.toChars(Integer.parseInt(chaineDeTravail, 2)));
+                        if(bitIndicateur.equals("1")){
+                            // c'est une node "gauche"
+                            nodeGauche = new Noeud(Character.toChars(Integer.parseInt(chaineDeTravail, 2))[0],0);
+                        }else{
+                            // c'est une node "droite"
+                            nodeDroite = new Noeud(Character.toChars(Integer.parseInt(chaineDeTravail, 2))[0],0);
+                        }
+                    }
+                }
 
+                bitIndicateurPrecedant = bitIndicateur;
+                step+=9;
+            }
+        }
+        // la boucle est finie et on a notre arbre binaire reconstruit ...
+        //nodeParent
+        //step
+        Noeud nodeActuelle = nodeGauche;
+        String texteResultant = "";
+        String texteADecoder = text.substring(step,text.length()-1);
 
+        nodeActuelle.setCaracter(Character.toChars(Integer.parseInt(valeurNoeudVide, 2))[0]);
+
+        for(int i=0;i<texteADecoder.length();i++){
+            char bit = texteADecoder.charAt(i);
+            if(bit == '1'){
+                nodeActuelle = nodeActuelle.getNoeudGauche();
+            }else{
+                nodeActuelle = nodeActuelle.getNoeudDroit();
+            }
+
+            if(nodeActuelle.getCaracter() != Character.toChars(Integer.parseInt(valeurNoeudVide, 2))[0]){
+                // c'est une lettre !
+                texteResultant += nodeActuelle.getCaracter();
+                nodeActuelle=nodeParent;
+            }
+
+        }
+
+        System.out.println("Voici le texte final :");
+        System.out.println(texteResultant);
     }
 
     public String encodeText(String texte) throws Exception{
@@ -68,8 +160,11 @@ public class StructureArbre {
         return textEncoder;
     }
 
-    private String contruireHeader(Noeud parent){
+    public String getHeader(){
+        return header;
+    }
 
+    private String contruireHeader(Noeud parent){
         Noeud debut = trouverNoeudPlusGauche(parent);
         header += debut.getBinaryCaracter() + debut.getValeurBitVersParent();
         //System.out.println("Le noeud de Gauche est une Feuille : '" + debut.getCaracter() + "'");
@@ -83,7 +178,7 @@ public class StructureArbre {
     }
 
     private String construireHeaderTriangle(Noeud gauche){
-        String header = "";
+        String currentHeader = "";
         //System.out.println("Nouveau triangle : '" +  gauche.getCaracter()+ "'");
         // lecture du triangle
         Noeud currentNodeLeft = gauche;
@@ -92,30 +187,30 @@ public class StructureArbre {
 
         if(currentNodeLeft.getParent().getNoeudDroit() != currentNodeLeft){
             //on vérifie si le côté droit est une feuille ou une branche
-            if(currentNodeRight.getCaracter() == ('\u0000')){
+            if(currentNodeRight.getCaracter() == (Character.toChars(Integer.parseInt(valeurNoeudVide, 2))[0])){
                 // le noeud est une branche
                 // devrais ajouter un deuxieme 1 de suite
                 compteur ++;
-                //System.out.println("Le noeud de droit est une branche, le noeud gauche : '" + trouverNoeudPlusGauche(currentNodeRight).getCaracter() + "'");
-                header += trouverNoeudPlusGauche(currentNodeRight).getBinaryCaracter() + trouverNoeudPlusGauche(currentNodeRight).getValeurBitVersParent();
-                header += construireHeaderTriangle(trouverNoeudPlusGauche(currentNodeRight));
+                //System.out.println("On descend le noeud gauche : '" + trouverNoeudPlusGauche(currentNodeRight).getCaracter() + "' : 1");
+                currentHeader += trouverNoeudPlusGauche(currentNodeRight).getBinaryCaracter() + trouverNoeudPlusGauche(currentNodeRight).getValeurBitVersParent();
+                currentHeader += construireHeaderTriangle(trouverNoeudPlusGauche(currentNodeRight));
             }else{
                 // le noeud est une feuille
                 //devrais ajouter un 0
-                //System.out.println("Le noeud de droit est une Feuille : '" + currentNodeRight.getCaracter() + "'");
-                header += currentNodeRight.getBinaryCaracter() + currentNodeRight.getValeurBitVersParent();
+                //System.out.println("Le noeud de droit est une Feuille : '" + currentNodeRight.getCaracter() + "' : 0");
+                currentHeader += currentNodeRight.getBinaryCaracter() + currentNodeRight.getValeurBitVersParent();
                 compteur++;
             }
             if(currentParent != null){
                 if(currentParent.getParent() != null){
-                    //System.out.println("Le noeud parent est une branche");
-                    header += valeurNoeudVide + currentParent.getValeurBitVersParent();
-                    header += construireHeaderTriangle(currentParent);
+                    //System.out.println("Le noeud parent est une branche :" + currentParent.getValeurBitVersParent());
+                    currentHeader += valeurNoeudVide + currentParent.getValeurBitVersParent();
+                    currentHeader += construireHeaderTriangle(currentParent);
                 }
             }
         }
 
-        return header;
+        return currentHeader;
     }
 
     private Noeud trouverNoeudPlusGauche(Noeud parent){
@@ -134,7 +229,7 @@ public class StructureArbre {
 			Noeud ng = listeNoeud.get(0);
             Noeud nd = listeNoeud.get(1);
 				
-			Noeud nParent = new Noeud('\u0000',ng.getCaracNbOccurence()+ng.getCaracNbOccurence(),ng,nd);
+			Noeud nParent = new Noeud(Character.toChars(Integer.parseInt(valeurNoeudVide, 2))[0],ng.getCaracNbOccurence()+ng.getCaracNbOccurence(),ng,nd);
 			
 			listeNoeud.remove(0);
 			listeNoeud.remove(0);

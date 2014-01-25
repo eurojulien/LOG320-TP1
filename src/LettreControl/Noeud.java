@@ -12,6 +12,7 @@ public class Noeud implements Comparable {
     private Noeud parent;
 
     public Noeud(char caracter, int caracNbOccurence){
+        //System.out.println("Added node '" + caracter + "'");
         this.caracter = caracter;
         this.caracNbOccurence = caracNbOccurence;
         parent = null;
@@ -83,8 +84,20 @@ public class Noeud implements Comparable {
         return caracter;
     }
 
+
+    public void setCaracter(char caracter){
+        this.caracter=caracter;
+    }
+
     public String getBinaryCaracter(){
-        return Integer.toBinaryString(caracter);
+        String returnCode = Integer.toBinaryString(caracter);
+        for(int i=0;i <= (8 - returnCode.length());i++){
+            returnCode = "0" + returnCode;
+        }
+        if(returnCode.length() > 8){
+            returnCode = returnCode.substring(1);
+        }
+        return returnCode;
     }
 	@Override
 	public int compareTo(Object o) {

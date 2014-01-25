@@ -26,12 +26,10 @@ public class listControler {
 		/* on cherche a ajouter la valeur a la lettre si elle existe*/
 		
 		for(int i=0;i<lstlettres.size();i++){
-		
 			if(lstlettres.get(i).getCaractere() == lettre){
 				lstlettres.get(i).add(1);
 				found = true;
 			}
-		
 		}
 		
 		if(!found){
