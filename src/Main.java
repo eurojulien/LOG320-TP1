@@ -16,33 +16,54 @@ public class Main {
 
 	public static listControler lstControl = new listControler();
 	
+	
+	// Options des parametres
+	// args[0] : (1 : Encripter, 1 : Decripter)
+	// args[1] : Nom du fichier texte
 	public static void main(String[] args) {
 		String texteComplet = "";
+		
+		int option = Integer.parseInt(args[0]);
+		StructureArbre struct;
+		
 		// Verifie qu'il y a un nom de fichier en parametre
 		if (args.length == 0){
 			System.out.println("Provide a text file !");
 		}
 		else{
-            texteComplet = FileParser(args[0]);
+			
+			// Encription
+			if (option == 1){
+				texteComplet = FileParser(args[0]);
+				
+				// on trie notre liste avec comparable
+				lstControl.trierListe();
+				
+				// on imprime les résultats (on enleve cet affichage pour gagner de la vitesse)
+				//lstControl.print();
+
+		        // on construit l'arbre
+		        System.out.println("Il y a " + lstControl.getArrayList().size() + " lettres dans le texte");
+		        struct = new StructureArbre(lstControl.getArrayList());
+		        
+		        try{
+		            struct.encodeText(texteComplet);
+		        }catch (Exception ex){
+		            System.out.println(ex.getMessage());
+		        }
+		        
+		        // voici le texte encoder (comprenant le header) :
+		        System.out.println("Text complet " + struct.getBinaryText());
+			}
+			
+			// Decription
+			if (option == 2){
+
+		        //String headerForTest = struct.getBinaryText();
+		        //struct = new StructureArbre(headerForTest);
+			}
+            
 		}
-		// on trie notre liste avec comparable
-		lstControl.trierListe();
-		// on imprime les résultats (on enleve cet affichage pour gagner de la vitesse)
-		//lstControl.print();
-
-        // on construit l'arbre
-        System.out.println("Il y a " + lstControl.getArrayList().size() + " lettres dans le texte");
-        StructureArbre struct = new StructureArbre(lstControl.getArrayList());
-
-        try{
-            struct.encodeText(texteComplet);
-        }catch (Exception ex){
-            System.out.println(ex.getMessage());
-        }
-        // voici le texte encoder (comprenant le header) :
-        System.out.println("Text complet " +struct.getBinaryText());
-        String headerForTest = struct.getBinaryText();
-        struct = new StructureArbre(headerForTest);
 	}
 	
 	// Ouvre un fichier texte a partir du nom de fichier
