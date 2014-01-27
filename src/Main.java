@@ -20,7 +20,9 @@ import binary.BinaryStdOut;
 public class Main {
 
 	public static listControler lstControl = new listControler();
-	
+	public static final String CRYPTED 	= ".cry";
+	public static final String TEXTE	= ".txt";
+	public static final String DECRYPT	= "_D";
 	
 	// Options des parametres
 	// args[0] : (1 : Encripter, 1 : Decripter)
@@ -62,28 +64,43 @@ public class Main {
 		        System.out.println("Text complet " + struct.getBinaryText());
 		        
 		        // Ecriture de la chaine dans le fichier
-		        BinaryStdOut.WriteBinaryToFile("encrypt.txt", struct.getBinaryText());
+		        BinaryStdOut.WriteBinaryToFile(fileNameWithoutExtention(args[1]) + CRYPTED, struct.getBinaryText());
 			}
 			
 			// Decription
 			if (option == 2){
 
 				// Lecture du fichier
-				texteComplet = BinaryStdIn.ReadBinaryFromFile("encrypt.txt");
+				texteComplet = BinaryStdIn.ReadBinaryFromFile(fileNameWithoutExtention(args[1]) + CRYPTED);
 				
-				// texteComplet est la chaine codee en 0 et 1
-				// TODO : (etape 1) : Il reste a decoder cette chaine
-				// TODO : (etape 2) : Ecrire la chaine dans le fichier
-				// Pour etape 2 : BinaryStdOut.setOutputFile(args[1])
-				// Pour etape 2 : Loop avec BinaryStdOut.writeChar();
+				// Decriptage fichier cripte
+				// TODO : Besoin de la chaine string decriptee
 				struct = new StructureArbre(texteComplet);
 				
+				// Destination fichier decripte 
+				BinaryStdOut.setOutputFile(fileNameWithoutExtention(args[1]) + DECRYPT + TEXTE);
 				
+				// Ecriture dans le fichier output
+				// TODO : J'ai utilise getBinaryText parce que je comprends pas comment la stucture decode ?
+				for (char letter : struct.getBinaryText().toCharArray()){
+					BinaryStdOut.write(letter);
+				}
+				
+				BinaryStdOut.close();
 				
 		        //String headerForTest = struct.getBinaryText();
 		        //struct = new StructureArbre(texteComplet);
 			}
             
+		}
+	}
+	
+	public static String fileNameWithoutExtention(String fileName){
+		
+		if(!fileName.contains(".")) return fileName;
+		
+		else{
+			return fileName.substring(0, fileName.indexOf("."));
 		}
 	}
 	
