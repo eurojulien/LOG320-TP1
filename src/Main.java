@@ -8,8 +8,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Writer;
+
 import LettreControl.*;
+
 import java.util.ArrayList;
+
+import binary.BinaryStdIn;
+import binary.BinaryStdOut;
 
 
 public class Main {
@@ -34,13 +39,14 @@ public class Main {
 			
 			// Encription
 			if (option == 1){
-				texteComplet = FileParser(args[0]);
+				
+				texteComplet = FileParser(args[1]);
 				
 				// on trie notre liste avec comparable
 				lstControl.trierListe();
 				
 				// on imprime les résultats (on enleve cet affichage pour gagner de la vitesse)
-				//lstControl.print();
+				lstControl.print();
 
 		        // on construit l'arbre
 		        System.out.println("Il y a " + lstControl.getArrayList().size() + " lettres dans le texte");
@@ -54,13 +60,28 @@ public class Main {
 		        
 		        // voici le texte encoder (comprenant le header) :
 		        System.out.println("Text complet " + struct.getBinaryText());
+		        
+		        // Ecriture de la chaine dans le fichier
+		        BinaryStdOut.WriteBinaryToFile("encrypt.txt", struct.getBinaryText());
 			}
 			
 			// Decription
 			if (option == 2){
 
+				// Lecture du fichier
+				texteComplet = BinaryStdIn.ReadBinaryFromFile("encrypt.txt");
+				
+				// texteComplet est la chaine codee en 0 et 1
+				// TODO : (etape 1) : Il reste a decoder cette chaine
+				// TODO : (etape 2) : Ecrire la chaine dans le fichier
+				// Pour etape 2 : BinaryStdOut.setOutputFile(args[1])
+				// Pour etape 2 : Loop avec BinaryStdOut.writeChar();
+				struct = new StructureArbre(texteComplet);
+				
+				
+				
 		        //String headerForTest = struct.getBinaryText();
-		        //struct = new StructureArbre(headerForTest);
+		        //struct = new StructureArbre(texteComplet);
 			}
             
 		}

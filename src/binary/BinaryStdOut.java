@@ -78,6 +78,8 @@ public final class BinaryStdOut {
     	
     	setOutputFile(fileName);
     	
+    	flush();
+    	
     	char[] charArray = chainOf1And0.toCharArray();
     	
     	for (char bit : charArray){
@@ -89,6 +91,8 @@ public final class BinaryStdOut {
     			writeBit(false);
     		}
     	}
+    	
+    	close();
     }
     
    /**

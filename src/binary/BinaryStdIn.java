@@ -59,7 +59,7 @@ public final class BinaryStdIn {
         catch (IOException e) { System.out.println("EOF"); buffer = EOF; N = -1; }
     }
     
-    private static void setInputFile(String fileName){
+    public static void setInputFile(String fileName){
     	
     	try {
 			in = new BufferedInputStream(new FileInputStream(fileName));
@@ -69,7 +69,7 @@ public final class BinaryStdIn {
 		}
     }
 
-    private static String ReadBinaryFromFile(String fileName){
+    public static String ReadBinaryFromFile(String fileName){
 		
     	setInputFile(fileName);
     	
@@ -77,8 +77,17 @@ public final class BinaryStdIn {
     	String arrayOf0And1 = "";
     	
     	while (! isEmpty()){
-    		arrayOf0And1 += readBoolean();
+    		
+    		if(readBoolean()){
+    			arrayOf0And1 += TRUE;
+    		}
+    		
+    		else{
+    			arrayOf0And1 += FALSE;
+    		}
     	}
+    	
+    	close();
     	
     	return arrayOf0And1;
     }
